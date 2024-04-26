@@ -1,0 +1,58 @@
+@startuml
+
+class Cliente {
+    - id: int
+    - nome: string
+    - email: string
+    - endereco: string
+    + fazerPedido(): void
+    + cancelarPedido(): void
+    + fazerDevolucao(): void
+}
+
+class Pedido {
+    - id: int
+    - itens: Item[]
+    - status: StatusPedido
+    + adicionarItem(item: Item): void
+    + removerItem(item: Item): void
+    + calcularTotal(): double
+}
+
+class Item {
+    - id: int
+    - descricao: string
+    - preco: double
+}
+
+enum StatusPedido {
+    AGUARDANDO_PAGAMENTO
+    EM_PROCESSAMENTO
+    ENVIADO
+    ENTREGUE
+    CANCELADO
+}
+
+class Atendente {
+    - id: int
+    - nome: string
+    + atenderCliente(cliente: Cliente): void
+    + processarPedido(pedido: Pedido): void
+    + processarDevolucao(pedido: Pedido): void
+}
+
+class Estoque {
+    - itensDisponiveis: Map<Item, int>
+    + adicionarItem(item: Item, quantidade: int): void
+    + removerItem(item: Item, quantidade: int): void
+    + verificarDisponibilidade(item: Item): boolean
+}
+
+Cliente "1" -- "0..*" Pedido
+Pedido "1" *-- "1..*" Item
+Atendente "1" -- "0..*" Pedido
+Atendente "1" -- "0..*" Cliente
+Pedido "1" o-- "1" StatusPedido
+Pedido "1" -- "1" Estoque
+
+@enduml
